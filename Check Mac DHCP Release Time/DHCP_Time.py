@@ -1,15 +1,14 @@
 import os
 import shutil
 import sys
-
 from xml.etree.ElementTree import ElementTree
-tree = ElementTree()
-for dirPath, dirNames, fileNames in os.walk("/var/db/dhcpclient/leases/", topdown=False):
-  print dirPath
-  for f in fileNames:
-    origonfile = os.path.join(dirPath, f)
-    shutil.copy2(origonfile,'/tmp')
-    tree.parse(origonfile)
-    p = tree.find("dict/integer")
-    print (p.text)
-    print origonfile
+
+
+for dirPath, dirNames, fileNames in os.walk("/var/db/dhcpclient/leases/"):
+  for FileName in fileNames:
+    originPath = os.path.join(dirPath, FileName)
+    shutil.copy2(originPath,'/tmp')
+    getXML = ElementTree()
+    getXML.parse(originPath)
+    DHCPtime = getXML.find("dict/integer")
+    print (FileName +' DHCP release time is : '+ DHCPtime.text)
