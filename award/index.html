@@ -59,12 +59,12 @@
       var today = new Date();
       var cxcxstatus = today.setDate(today.getDate() + 356);
       const dateCXCXSTATUS = new Date(cxcxstatus)
-      document.getElementById('cx-cx-status').innerHTML = '標準賞，綠卡（含）以上會籍，換『國泰』機票：最遠可以訂到的票: <b>'+(dateCXCXSTATUS.toLocaleDateString()) + '</b>   (意味可以訂第 356 天的票)';
+      document.getElementById('cx-cx-status-card').innerHTML = '標準賞，銀卡（含）以上會籍且有信用卡聯名卡，換『國泰』機票：最遠可以訂到的票: <b>'+(dateCXCXSTATUS.toLocaleDateString()) + '</b>   (意味可以訂第 356 天的票)';
   
       var today = new Date();
       var cxcxflex = today.setDate(today.getDate() + 360);
       const dateCXCXFLEX = new Date(cxcxflex)
-      document.getElementById('cx-cx-flex').innerHTML = '靈活賞，無會籍，換『國泰』機票：最遠可以訂到的票: <b>'+(dateCXCXFLEX.toLocaleDateString()) + '</b>   (意味可以訂第 360 天的票)';
+      document.getElementById('cx-cx-status-nocard').innerHTML = '靈活賞，無會籍，換『國泰』機票：最遠可以訂到的票: <b>'+(dateCXCXFLEX.toLocaleDateString()) + '</b>   (意味可以訂第 360 天的票)';
 
       var today = new Date();
       var bajl = today.setDate(today.getDate() + 354);
@@ -132,8 +132,7 @@
       <h5>香港時間 00:00 AM 放當天「整天全部」的航班，意思就是台灣時間 00:00 AM 準時放票</h5>
       <div id="cx-jl"></div>
       <div id="cx-cx"></div>
-      <div id="cx-cx-status"></div>
-      <div id="cx-cx-flex"></div>
+      <div id="cx-cx-status-card"></div>
       </br>
       <div>最近可以訂到的票：當天票，只要該航班還有在網路賣現金票就可以換到里程票</div>
   </body>
