@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -61,11 +62,6 @@
       const dateCXCXSTATUS = new Date(cxcxstatus)
       document.getElementById('cx-cx-status-card').innerHTML = '標準賞，銀卡（含）以上會籍且有信用卡聯名卡，換『國泰』機票：最遠可以訂到的票: <b>'+(dateCXCXSTATUS.toLocaleDateString()) + '</b>   (意味可以訂第 356 天的票)';
   
-      var today = new Date();
-      var cxcxflex = today.setDate(today.getDate() + 360);
-      const dateCXCXFLEX = new Date(cxcxflex)
-      document.getElementById('cx-cx-status-nocard').innerHTML = '靈活賞，無會籍，換『國泰』機票：最遠可以訂到的票: <b>'+(dateCXCXFLEX.toLocaleDateString()) + '</b>   (意味可以訂第 360 天的票)';
-
       var today = new Date();
       var bajl = today.setDate(today.getDate() + 354);
       const dateBAJL = new Date(bajl)
@@ -181,7 +177,7 @@
     <div id="nh-nh"></div>
     </br>
     <div>最近可以訂到的票：96 小時前</div> 
-    <div>最遠可以訂到的票：第 365 天 </div> 
+    <div>最遠可以訂到的票：第 355 天 </div> 
   </div>
 </main>
 
