@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -62,6 +61,11 @@
       const dateCXCXSTATUS = new Date(cxcxstatus)
       document.getElementById('cx-cx-status-card').innerHTML = '標準賞，銀卡（含）以上會籍且有信用卡聯名卡，換『國泰』機票：最遠可以訂到的票: <b>'+(dateCXCXSTATUS.toLocaleDateString()) + '</b>   (意味可以訂第 356 天的票)';
   
+      var today = new Date();
+      var cxcxflex = today.setDate(today.getDate() + 360);
+      const dateCXCXFLEX = new Date(cxcxflex)
+      document.getElementById('cx-cx-status-nocard').innerHTML = '靈活賞，無會籍，換『國泰』機票：最遠可以訂到的票: <b>'+(dateCXCXFLEX.toLocaleDateString()) + '</b>   (意味可以訂第 360 天的票)';
+
       var today = new Date();
       var bajl = today.setDate(today.getDate() + 354);
       const dateBAJL = new Date(bajl)
@@ -145,7 +149,6 @@
     <div id="ba-jl"></div>
     </br>
     <div>最近可以訂到的票：隔天票，同樣都換 JL 的機票，但 BA 明顯比 AM 能換的少</div>
-    <div>最遠可以訂到的票：第 355 天 </div>  
   </div>
 </main>
 
@@ -155,13 +158,11 @@
 <main class="container">
   <div class="bg-light p-5 rounded">
     <h1>日本航空 JMB</h1>
-    <h5>即使「外站出發」，還是用出發地的日曆日計算天數 (意思就是以航班起飛之「當地日期」來釋出放票)</h5>
-    <h5>日本時間 10:00 AM 放當天日本出發「整天全部」的航班，意思就是台灣時間 09:00 AM 準時放票</h5>
+    <h5>即使「外站出發」，還是用出發地的日曆日計算天數</h5>
+    <h5>日本時間 10:00 AM 放當天「整天全部」的航班，意思就是台灣時間 09:00 AM 準時放票</h5>
     <div id="jl-jl"></div>
     </br>
-    <div>最近可以訂到的票：網站 48 小時前，電話 24 小時前（如果電話客服下班就只能等上班）</div>  
-    <div>最遠可以訂到的票：第 360 天 </div>  
-    <div>經驗談：通常第 360 天會釋放出一個頭等位，且與寰宇一家夥伴成員共享位置</div>      
+    <div>最近可以訂到的票：網站 48 小時前，電話 24 小時前（如果電話客服下班就只能等上班）</div>   
 
   </div>
 </main>
@@ -172,12 +173,12 @@
 <main class="container">
   <div class="bg-light p-5 rounded">
     <h1>全日空 AMC</h1>
-    <h5>即使「外站出發」，還是用出發地的日曆日計算天數 (意思就是以航班起飛之「當地日期」來釋出放票)</h5>
-    <h5>日本時間 09:00 AM 放當天日本出發「整天全部」的航班，意思就是台灣時間 08:00 AM 準時放票</h5>
+    <h5>即使「外站出發」，還是用出發地的日曆日計算天數</h5>
+    <h5>日本時間 09:00 AM 放當天「整天全部」的航班，意思就是台灣時間 08:00 AM 準時放票</h5>
+    <h5>因為長榮放票是 360 天就放，所以日本時間 355 天的 00:00 AM 就可以看到長榮票，只有 ANA 自家的要等到日本時間的 09:00 AM 才會放票</h5>
     <div id="nh-nh"></div>
     </br>
     <div>最近可以訂到的票：96 小時前</div> 
-    <div>最遠可以訂到的票：第 355 天 </div> 
   </div>
 </main>
 
