@@ -50,17 +50,7 @@
   
       var cxjl = today.setDate(today.getDate() + 360);
       const dateCXJL = new Date(cxjl)
-      document.getElementById('cx-jl').innerHTML = '標準賞，無會籍，換『外航』機票：最遠可以訂到的票: <b>'+(dateCXJL.toLocaleDateString()) + '</b>   (意味可以訂第 360 天的票)';
-  
-      var today = new Date();
-      var cxcx = today.setDate(today.getDate() + 353);
-      const dateCXCX = new Date(cxcx)
-      document.getElementById('cx-cx').innerHTML = '標準賞，無會籍，換『國泰』機票：最遠可以訂到的票: <b>'+(dateCXCX.toLocaleDateString()) + '</b>   (意味可以訂第 353 天的票)';
-  
-      var today = new Date();
-      var cxcxstatus = today.setDate(today.getDate() + 356);
-      const dateCXCXSTATUS = new Date(cxcxstatus)
-      document.getElementById('cx-cx-status-card').innerHTML = '標準賞，銀卡（含）以上會籍且有信用卡聯名卡，換『國泰』機票：最遠可以訂到的票: <b>'+(dateCXCXSTATUS.toLocaleDateString()) + '</b>   (意味可以訂第 356 天的票)';
+      document.getElementById('cx-jl').innerHTML = '標準賞，換『國泰或外航』機票：國泰系統最遠可選的出發日期：<b>'+(dateCXJL.toLocaleDateString()) + '</b>   (第 360 天；外航實際開放兌換時間以該航空公司為準)';
   
       var today = new Date();
       var bajl = today.setDate(today.getDate() + 354);
@@ -121,16 +111,14 @@
 
 <main class="container">
   <div class="bg-light p-5 rounded">
-    <h1>亞洲萬里通 AM</h1>
+    <h1>國泰航空 - 亞洲萬里通 (Asia Miles)</h1>
     
     <body onload="ShowTime()">
-      <h5>以香港時區為主，「外站出發」請把當地時區回推當下的香港時區（所以外站有機會換到日曆日「再往後一天」的票）</h5>
-      <h5>香港時間 00:00 AM 放當天「整天全部」的航班，意思就是台灣時間 00:00 AM 準時放票</h5>
+      <h5>依個人實測，放票以香港時間為準。查詢外站出發的航班時，請將起飛的當地時間換算成香港時間；因時差關係，有機會換到以出發地日曆日來看「再往後一天」的機票。</h5>
+      <h5>依個人實測，香港時間 00:00 AM 會放出第 360 天「整天」的航班，台灣時間也是 00:00 AM；實際能否兌換仍要看有沒有哩程票位置。</h5>
       <div id="cx-jl"></div>
-      <div id="cx-cx"></div>
-      <div id="cx-cx-status-card"></div>
       </br>
-      <div>最近可以訂到的票：當天票，只要該航班還有在網路賣現金票就可以換到里程票</div>
+      <div>最近可以訂到的票：當天票，只要該航班還有在網路賣現金票、哩程票還有位置，且系統仍開放訂位，就可以換到哩程票</div>
   </body>
   </div>
 </main>
