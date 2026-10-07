@@ -44,28 +44,45 @@
 
 
 <script language="JavaScript">
+  function bookingDate(now, timeZone, days, releaseHour = 0) {
+      const parts = Object.fromEntries(
+          new Intl.DateTimeFormat('en-US', {
+              timeZone, year: 'numeric', month: 'numeric', day: 'numeric',
+              hour: 'numeric', hourCycle: 'h23'
+          }).formatToParts(now).map(({type, value}) => [type, value])
+      );
+      const availableDays = Number(parts.hour) < releaseHour ? days - 1 : days;
+      const date = new Date(Date.UTC(
+          Number(parts.year), Number(parts.month) - 1,
+          Number(parts.day) + availableDays
+      ));
+      return {
+          date: date.toLocaleDateString(undefined, {timeZone: 'UTC'}),
+          days: availableDays
+      };
+  }
+
   function ShowTime(){
-      var today = new Date();
-      document.getElementById('showbox').innerHTML = '<h5>現在時間：' + Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'}) + '</h5>';
+      const now = new Date();
+      document.getElementById('showbox').innerHTML = '<h5>現在時間（台灣）：' + now.toLocaleString('zh-TW', {timeZone: 'Asia/Taipei', hour12: false}) + '</h5>';
   
-      var cxjl = today.setDate(today.getDate() + 360);
-      const dateCXJL = new Date(cxjl)
-      document.getElementById('cx-jl').innerHTML = '標準賞，換『國泰或外航』機票：國泰系統最遠可選的出發日期：<b>'+(dateCXJL.toLocaleDateString()) + '</b>   (第 360 天；外航實際開放兌換時間以該航空公司為準)';
+      const dateCXJL = bookingDate(now, 'Asia/Hong_Kong', 360);
+      document.getElementById('cx-jl').innerHTML = '標準賞，換『國泰或外航』機票：國泰系統最遠可選的出發日期：<b>'+(dateCXJL.date) + '</b>   (第 360 天；外航實際開放兌換時間以該航空公司為準)';
   
-      var today = new Date();
-      var bajl = today.setDate(today.getDate() + 354);
-      const dateBAJL = new Date(bajl)
-      document.getElementById('ba-jl').innerHTML = 'Avios 換『任意』機票：最遠可以訂到的票: <b>'+(dateBAJL.toLocaleDateString()) + '</b>   (意味可以訂第 354 天的票)';
+      const dateBAJL = bookingDate(now, 'Europe/London', 355);
+      document.getElementById('ba-jl').innerHTML = 'Avios 換『英航或外航』機票：最遠可選到 <b>'+(dateBAJL.date) + '</b>（第 355 天；外航依實際放票為準）';
 
-      var today = new Date();
-      var jljl = today.setDate(today.getDate() + 360);
-      const dateJLJL = new Date(jljl)
-      document.getElementById('jl-jl').innerHTML = 'JMB 換『任意』機票：最遠可以訂到的票: <b>'+(dateJLJL.toLocaleDateString()) + '</b>   (意味可以訂第 360 天的票)';
+      const dateJLJL = bookingDate(now, 'Asia/Tokyo', 360, 10);
+      document.getElementById('jl-jl').innerHTML = 'JMB 換『日航或外航』機票：最遠可選到 <b>'+(dateJLJL.date) + '</b>（第 ' + dateJLJL.days + ' 天；外航依實際放票為準）';
 
-      var today = new Date();
-      var nhnh = today.setDate(today.getDate() + 355);
-      const dateNHNH = new Date(nhnh)
-      document.getElementById('nh-nh').innerHTML = 'AMC 換『任意』機票：最遠可以訂到的票: <b>'+(dateNHNH.toLocaleDateString()) + '</b>   (意味可以訂第 355 天的票)';
+      const dateNHNH = bookingDate(now, 'Asia/Tokyo', 355, 9);
+      document.getElementById('nh-nh').innerHTML = 'AMC 換『全日空或外航』機票：最遠可選到 <b>'+(dateNHNH.date) + '</b>（第 ' + dateNHNH.days + ' 天；外航依實際放票為準）';
+
+      const dateBRBR = bookingDate(now, 'Asia/Taipei', 360);
+      document.getElementById('br-br').innerHTML = '長榮一般訂位系統最遠可選到 <b>'+(dateBRBR.date) + '</b>（第 360 天；哩程票仍以實際獎勵機位為準）';
+
+      const dateJXJX = bookingDate(now, 'Asia/Taipei', 360);
+      document.getElementById('jx-jx').innerHTML = '星宇班機時刻表最遠可查到 <b>'+(dateJXJX.date) + '</b>（第 360 天；不代表當天已有酬賓機位）';
   
   　setTimeout('ShowTime()',1000);
   }
@@ -99,7 +116,7 @@
     <h1>Notice</h1>
     
     <body onload="ShowTime()">
-      <h4>請把電腦時區切到 UTC+8 後再看本頁面</h4>
+      <h4>現在時間以台灣時間顯示；各航空的最遠日期依其所在地時區計算，不需調整電腦時區</h4>
       <div id="showbox"></div>
       <h4>如果是要換外航的票，是要等外航自家放票了才能用非本家的點數換到 </h4>
       <h5>例：AM 跟 JMB 都為 360 天放票，但 AM 00:00 AM 而 JMB 09:00 AM 放票，所以拿 AM 換 JL 機票要等到 09:00 AM 票才會出現）</h5>
@@ -127,13 +144,12 @@
 
 <main class="container">
   <div class="bg-light p-5 rounded">
-    <h1>英國航空 Avios</h1>
-    <h5>即使「外站出發」，還是用出發地的日曆日計算天數</h5>
-    <h5>英國時間 00:00 AM 放當天「整天全部」的航班，意思就是台灣時間 08:00 AM 準時放票</h5>
+    <h1>英國航空 - British Airways Club (Avios)</h1>
+    <h5>依個人實測，外站出發的航班仍以出發地的日曆日計算可訂天數。</h5>
+    <h5>英國時間 00:00，放出第 355 天「整天所有航班」的哩程票。<br>台灣時間：英國夏令期間 07:00／冬令期間 08:00。</h5>
     <div id="ba-jl"></div>
     </br>
-    <div>最近可以訂到的票：隔天票，同樣都換 JL 的機票，但 BA 明顯比 AM 能換的少</div>
-    <div>最遠可以訂到的票：第 355 天 </div>  
+    <div>最近可以訂到的票：依個人實測，最接近可換到隔天出發的機票；以 JL 為例，BA 可兌換的機位比 AM 少</div>
   </div>
 </main>
 
@@ -142,13 +158,12 @@
 
 <main class="container">
   <div class="bg-light p-5 rounded">
-    <h1>日本航空 JMB</h1>
+    <h1>日本航空 - JAL Mileage Bank (JMB)</h1>
     <h5>即使「外站出發」，還是用出發地的日曆日計算天數 (意思就是以航班起飛之「當地日期」來釋出放票)</h5>
-    <h5>日本時間 10:00 AM 放當天日本出發「整天全部」的航班，意思就是台灣時間 09:00 AM 準時放票</h5>
+    <h5>依個人實測，日本時間 10:00 AM 放當天日本出發「整天全部」的航班，意思就是台灣時間 09:00 AM 準時放票</h5>
     <div id="jl-jl"></div>
     </br>
     <div>最近可以訂到的票：網站 48 小時前，電話 24 小時前（如果電話客服下班就只能等上班）</div>  
-    <div>最遠可以訂到的票：第 360 天 </div>  
     <div>經驗談：通常第 360 天會釋放出一個頭等位，且與寰宇一家夥伴成員共享位置</div>      
 
   </div>
@@ -159,14 +174,44 @@
 
 <main class="container">
   <div class="bg-light p-5 rounded">
-    <h1>全日空 AMC</h1>
+    <h1>全日空 - ANA Mileage Club (AMC)</h1>
     <h5>即使「外站出發」，還是用出發地的日曆日計算天數 (意思就是以航班起飛之「當地日期」來釋出放票)</h5>
-    <h5>日本時間 09:00 AM 放當天日本出發「整天全部」的航班，意思就是台灣時間 08:00 AM 準時放票</h5>
-    <h5>雖然長榮放票是 360 天，且日本時間 355 天的 00:00 AM 就可以看到長榮票，但走到稅金那一步還是會出錯。一樣要等日本時間 09:00 AM 才能換</h5>
+    <h5>日本時間 09:00，開放第 355 天日本出發「整天航班」的哩程票查詢。<br>台灣時間：08:00。實際有無哩程票位置，以查詢結果為準。</h5>
+    <h5>依個人實測：長榮在第 360 天放票。<br>ANA 網站在第 355 天的日本時間 00:00 就能看到長榮機位，但進到稅金步驟會出錯。<br>須等到日本時間 09:00 才能完成兌換。</h5>
     <div id="nh-nh"></div>
     </br>
-    <div>最近可以訂到的票：96 小時前</div> 
-    <div>最遠可以訂到的票：第 355 天 </div> 
+    <div>最近可以訂到的票：以行程第一航段的起飛時間往前推算 96 小時</div> 
+  </div>
+</main>
+
+<!-- 長榮航空 -->
+</br>
+
+<main class="container">
+  <div class="bg-light p-5 rounded">
+    <h1>長榮航空 - 無限萬哩遊 (Infinity MileageLands)</h1>
+    <div class="text-muted small">以下資訊皆為網路資訊，未經驗證。</div>
+    <h5>放票時間：官網未公布固定時刻。網友曾在台灣時間 00:00 看到第 360 天機位<sup><a href="https://www.reddit.com/r/awardtravel/comments/135aqgm" target="_blank" rel="noopener noreferrer" title="網友紀錄：台灣時間 00:00">[1]</a></sup>；PTT 網友則約在 08:00 看到新機位<sup><a href="https://www.ptt.cc/bbs/points/M.1684775818.A.17B.html" target="_blank" rel="noopener noreferrer" title="PTT 實測：台灣時間約 08:00">[2]</a></sup>。</h5>
+    <div id="br-br"></div>
+    </br>
+    <div>換『星盟外航』機票：依承運航空公司開放時間；全程有位才能開票。</div>
+    <div>最近可以訂到的票：官網未列固定截止時間；須在起飛前完成訂位與開票。</div>
+    <div>近期機位：星盟夥伴有起飛前約 3 天補位的經驗<sup><a href="https://www.reddit.com/r/awardtravel/comments/1usety6/how_is_eva_last_minute_availability_from_us_to/" target="_blank" rel="noopener noreferrer" title="網友經驗：起飛前約 3 天可能補位，熱門日期不保證">[3]</a></sup>，不保證。</div>
+  </div>
+</main>
+
+<!-- 星宇航空 -->
+</br>
+
+<main class="container">
+  <div class="bg-light p-5 rounded">
+    <h1>星宇航空 - COSMILE</h1>
+    <div class="text-muted small">以下資訊皆為網路資訊，未經驗證。</div>
+    <h5>放票時間：官網未公布固定時刻。PTT 網友曾在台灣時間早上 09:00 看到第 360 天機位<sup><a href="https://www.ptt.cc/bbs/points/M.1697423577.A.157.html" target="_blank" rel="noopener noreferrer" title="2023 年 PTT 實測：台灣時間早上 09:00；連假航班不一定有位">[1]</a></sup>；熱門日期不保證放票，可能須候補<sup><a href="https://www.ptt.cc/bbs/points/M.1681656450.A.A2F.html" target="_blank" rel="noopener noreferrer" title="2023 年 PTT 網友轉述客服：酬賓機位彈性開放，連假日期可能須候補">[2]</a></sup>。</h5>
+    <div id="jx-jx"></div>
+    </br>
+    <div>換『星宇或阿拉斯加航空』機票：阿拉斯加限符合規定的美國國內線；實際機位以查詢結果為準。</div>
+    <div>最近可以訂到的票：官網未列固定截止時間；須在起飛前完成訂位與開票。</div>
   </div>
 </main>
 
