@@ -40,6 +40,23 @@
           font-size: 3.5rem;
         }
       }
+
+      .airline-panel h1 {
+        font-size: 1.75rem;
+        line-height: 1.3;
+        margin-bottom: 1rem;
+      }
+
+      .airline-panel h5 {
+        font-size: 1.05rem;
+        line-height: 1.6;
+      }
+
+      .airline-panel .booking-range {
+        border-top: 1px solid #dee2e6;
+        margin-top: 1rem;
+        padding-top: 1rem;
+      }
     </style>
 
 
@@ -94,32 +111,30 @@
   </head>
   <body>
     
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<nav class="navbar navbar-dark fixed-top bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">查詢最遠＆最近可開的票</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-      <ul class="navbar-nav me-auto mb-2 mb-md-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-      </ul>
-    </div>
   </div>
 </nav>
 
 
 <main class="container">
   <div class="bg-light p-5 rounded">
-    <h1>Notice</h1>
+    <h1>注意事項</h1>
     
     <body onload="ShowTime()">
-      <h4>現在時間以台灣時間顯示；各航空的最遠日期依其所在地時區計算，不需調整電腦時區</h4>
+      <h5>時間與日期</h5>
       <div id="showbox"></div>
-      <h4>如果是要換外航的票，是要等外航自家放票了才能用非本家的點數換到 </h4>
-      <h5>例：AM 跟 JMB 都為 360 天放票，但 AM 00:00 AM 而 JMB 09:00 AM 放票，所以拿 AM 換 JL 機票要等到 09:00 AM 票才會出現）</h5>
+      <p>上方顯示台灣時間；各航空的最遠日期依其所在地時區計算，不需調整電腦時區。</p>
+
+      <h5 class="mt-4">換外航機票</h5>
+      <p>須等該航空開放哩程機位，且有可兌換的位置。</p>
+      <p class="mb-2">例：AM（亞洲萬里通）與 JMB（日航）最遠都可查第 360 天。依個人實測：</p>
+      <ul>
+        <li>AM 於香港時間 00:00 開放。</li>
+        <li>日航於日本時間 10:00（台灣時間 09:00）開放。</li>
+      </ul>
+      <p class="mb-0">用 AM 換 JL（日航）機票，仍須等日航開放且有哩程機位。</p>
     </body>
   </div>
 </main>
@@ -127,13 +142,13 @@
 </br>
 
 <main class="container">
-  <div class="bg-light p-5 rounded">
+  <div class="bg-light p-3 p-md-4 rounded airline-panel">
     <h1>國泰航空 - 亞洲萬里通 (Asia Miles)</h1>
     
     <body onload="ShowTime()">
       <h5>依個人實測，放票以香港時間為準。查詢外站出發的航班時，請將起飛的當地時間換算成香港時間；因時差關係，有機會換到以出發地日曆日來看「再往後一天」的機票。</h5>
       <h5>依個人實測，香港時間 00:00 AM 會放出第 360 天「整天」的航班，台灣時間也是 00:00 AM；實際能否兌換仍要看有沒有哩程票位置。</h5>
-      <div id="cx-jl"></div>
+      <div id="cx-jl" class="booking-range"></div>
       </br>
       <div>最近可以訂到的票：當天票，只要該航班還有在網路賣現金票、哩程票還有位置，且系統仍開放訂位，就可以換到哩程票</div>
   </body>
@@ -143,11 +158,11 @@
 </br>
 
 <main class="container">
-  <div class="bg-light p-5 rounded">
+  <div class="bg-light p-3 p-md-4 rounded airline-panel">
     <h1>英國航空 - British Airways Club (Avios)</h1>
     <h5>依個人實測，外站出發的航班仍以出發地的日曆日計算可訂天數。</h5>
     <h5>英國時間 00:00，放出第 355 天「整天所有航班」的哩程票。<br>台灣時間：英國夏令期間 07:00／冬令期間 08:00。</h5>
-    <div id="ba-jl"></div>
+    <div id="ba-jl" class="booking-range"></div>
     </br>
     <div>最近可以訂到的票：依個人實測，最接近可換到隔天出發的機票；以 JL 為例，BA 可兌換的機位比 AM 少</div>
   </div>
@@ -157,11 +172,11 @@
 </br>
 
 <main class="container">
-  <div class="bg-light p-5 rounded">
+  <div class="bg-light p-3 p-md-4 rounded airline-panel">
     <h1>日本航空 - JAL Mileage Bank (JMB)</h1>
     <h5>即使「外站出發」，還是用出發地的日曆日計算天數 (意思就是以航班起飛之「當地日期」來釋出放票)</h5>
     <h5>依個人實測，日本時間 10:00 AM 放當天日本出發「整天全部」的航班，意思就是台灣時間 09:00 AM 準時放票</h5>
-    <div id="jl-jl"></div>
+    <div id="jl-jl" class="booking-range"></div>
     </br>
     <div>最近可以訂到的票：網站 48 小時前，電話 24 小時前（如果電話客服下班就只能等上班）</div>  
     <div>經驗談：通常第 360 天會釋放出一個頭等位，且與寰宇一家夥伴成員共享位置</div>      
@@ -173,12 +188,12 @@
 
 
 <main class="container">
-  <div class="bg-light p-5 rounded">
+  <div class="bg-light p-3 p-md-4 rounded airline-panel">
     <h1>全日空 - ANA Mileage Club (AMC)</h1>
     <h5>即使「外站出發」，還是用出發地的日曆日計算天數 (意思就是以航班起飛之「當地日期」來釋出放票)</h5>
     <h5>日本時間 09:00，開放第 355 天日本出發「整天航班」的哩程票查詢。<br>台灣時間：08:00。實際有無哩程票位置，以查詢結果為準。</h5>
     <h5>依個人實測：長榮在第 360 天放票。<br>ANA 網站在第 355 天的日本時間 00:00 就能看到長榮機位，但進到稅金步驟會出錯。<br>須等到日本時間 09:00 才能完成兌換。</h5>
-    <div id="nh-nh"></div>
+    <div id="nh-nh" class="booking-range"></div>
     </br>
     <div>最近可以訂到的票：以行程第一航段的起飛時間往前推算 96 小時</div> 
   </div>
@@ -188,11 +203,11 @@
 </br>
 
 <main class="container">
-  <div class="bg-light p-5 rounded">
+  <div class="bg-light p-3 p-md-4 rounded airline-panel">
     <h1>長榮航空 - 無限萬哩遊 (Infinity MileageLands)</h1>
     <div class="text-muted small">以下資訊皆為網路資訊，未經驗證。</div>
     <h5>放票時間：官網未公布固定時刻。網友曾在台灣時間 00:00 看到第 360 天機位<sup><a href="https://www.reddit.com/r/awardtravel/comments/135aqgm" target="_blank" rel="noopener noreferrer" title="網友紀錄：台灣時間 00:00">[1]</a></sup>；PTT 網友則約在 08:00 看到新機位<sup><a href="https://www.ptt.cc/bbs/points/M.1684775818.A.17B.html" target="_blank" rel="noopener noreferrer" title="PTT 實測：台灣時間約 08:00">[2]</a></sup>。</h5>
-    <div id="br-br"></div>
+    <div id="br-br" class="booking-range"></div>
     </br>
     <div>換『星盟外航』機票：依承運航空公司開放時間；全程有位才能開票。</div>
     <div>最近可以訂到的票：官網未列固定截止時間；須在起飛前完成訂位與開票。</div>
@@ -204,11 +219,11 @@
 </br>
 
 <main class="container">
-  <div class="bg-light p-5 rounded">
+  <div class="bg-light p-3 p-md-4 rounded airline-panel">
     <h1>星宇航空 - COSMILE</h1>
     <div class="text-muted small">以下資訊皆為網路資訊，未經驗證。</div>
     <h5>放票時間：官網未公布固定時刻。PTT 網友曾在台灣時間早上 09:00 看到第 360 天機位<sup><a href="https://www.ptt.cc/bbs/points/M.1697423577.A.157.html" target="_blank" rel="noopener noreferrer" title="2023 年 PTT 實測：台灣時間早上 09:00；連假航班不一定有位">[1]</a></sup>；熱門日期不保證放票，可能須候補<sup><a href="https://www.ptt.cc/bbs/points/M.1681656450.A.A2F.html" target="_blank" rel="noopener noreferrer" title="2023 年 PTT 網友轉述客服：酬賓機位彈性開放，連假日期可能須候補">[2]</a></sup>。</h5>
-    <div id="jx-jx"></div>
+    <div id="jx-jx" class="booking-range"></div>
     </br>
     <div>換『星宇或阿拉斯加航空』機票：阿拉斯加限符合規定的美國國內線；實際機位以查詢結果為準。</div>
     <div>最近可以訂到的票：官網未列固定截止時間；須在起飛前完成訂位與開票。</div>
