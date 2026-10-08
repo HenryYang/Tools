@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="從信用卡回饋 YAML 自動產生的比較與試算工具。">
+  <meta name="color-scheme" content="light">
+  <title>卡片回饋雷達</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23009e91'/%3E%3Cpath d='M14 20h36v24H14z' rx='4' fill='white'/%3E%3Cpath d='M14 27h36' stroke='%23ff795f' stroke-width='6'/%3E%3Ccircle cx='43' cy='38' r='3' fill='%2325343a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css?v=20261008-hotel-transfers">
+  <script src="data.generated.js?v=20261008-hotel-transfers"></script>
+  <script src="app.js?v=20261008-hotel-transfers" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="回到頁首">
+      <span class="brand-mark" aria-hidden="true">里</span>
+      <span>卡片回饋雷達</span>
+    </a>
+    <div class="as-of" id="asOf">讀取資料中</div>
+  </header>
+
+  <main id="top">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">信用卡回饋資料庫</p>
+        <h1 id="page-title">每一個數字，都能回到原始資料。</h1>
+        <p class="lede">查看各卡的比例、適用條件、排除規則、上限、轉點與查證狀態。摘要不會自行猜測「最優」情境。</p>
+      </div>
+      <div class="summary" id="summary" aria-label="資料摘要"></div>
+    </section>
+
+    <nav class="view-tabs" role="tablist" aria-label="查詢方式">
+      <button id="cardsTab" role="tab" aria-selected="true" aria-controls="cardsView" tabindex="0">信用卡查詢</button>
+      <button id="airlinesTab" role="tab" aria-selected="false" aria-controls="airlinesView" tabindex="-1">航空／飯店轉點</button>
+    </nav>
+    <div id="cardsView" role="tabpanel" aria-labelledby="cardsTab">
+    <section class="workspace" aria-label="回饋試算">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">受限試算</p>
+          <h2>用已知的計算規則估算</h2>
+        </div>
+        <span class="notice">依所選回饋項目計算；不會自行推定資格、疊加、額度或排除項目</span>
+      </div>
+      <div class="calculator-grid">
+        <label>卡片
+          <select id="calcCard"></select>
+        </label>
+        <label>回饋情境
+          <select id="calcOption"></select>
+        </label>
+        <label><span id="calcAmountLabel">金額（TWD）</span>
+          <input id="calcAmount" type="number" min="0" step="1" value="10000" inputmode="decimal">
+        </label>
+        <div class="calc-result" aria-live="polite">
+          <span>所選項目結果</span>
+          <strong id="calcPrimary">—</strong>
+          <small id="calcSecondary">請選擇卡片與情境</small>
+        </div>
+      </div>
+      <details id="calcTransfers" class="calc-transfers" hidden>
+        <summary id="calcTransferSummary">查看航空／飯店換算</summary>
+        <p class="calc-transfer-notice">按比例估算，尚未套用最低兌換門檻與兌換單位。</p>
+        <div id="calcTransferList" class="calc-transfer-list"></div>
+      </details>
+      <div class="calc-meta" id="calcMeta"></div>
+    </section>
+
+    <section class="mile-board" aria-labelledby="mile-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">分期換哩</p>
+          <h2 id="mile-title">特店分期的每哩成本</h2>
+        </div>
+      </div>
+      <div class="metric-grid" id="metricGrid"></div>
+    </section>
+
+    <section class="catalog" aria-labelledby="catalog-title">
+      <div class="section-heading catalog-heading">
+        <div>
+          <p class="eyebrow">全部卡片</p>
+          <h2 id="catalog-title">比較優惠與限制</h2>
+        </div>
+        <div class="filters">
+          <label class="search-label"><span class="sr-only">搜尋卡片</span><input id="search" type="search" placeholder="搜尋卡片或發卡行"></label>
+          <label><span class="sr-only">發卡行</span><select id="issuerFilter"><option value="">全部發卡行</option></select></label>
+          <label class="toggle"><input id="activeOnly" type="checkbox" checked><span>只看目前有效</span></label>
+        </div>
+      </div>
+      <div class="catalog-count" id="catalogCount"></div>
+      <div class="card-list" id="cardList"></div>
+      <div class="empty" id="emptyState" hidden>沒有符合條件的卡片。</div>
+    </section>
+    </div>
+    <section id="airlinesView" role="tabpanel" aria-labelledby="airlinesTab" hidden>
+      <div class="section-heading catalog-heading">
+        <div><p class="eyebrow">依航空與飯店計畫查詢</p><h2>找出可以轉點的信用卡</h2><p class="airline-intro">點開航空或飯店品牌，查看信用卡、來源點數與兌換比例。</p></div>
+        <div class="filters">
+          <label class="search-label"><span class="sr-only">搜尋轉點計畫</span><input id="airlineSearch" type="search" placeholder="搜尋航空、飯店品牌或會員計畫"></label>
+          <label><span class="sr-only">計畫類型</span><select id="destinationCategory"><option value="">航空與飯店</option><option value="airline">航空計畫</option><option value="hotel">飯店計畫</option></select></label>
+          <label class="toggle"><input id="airlineActiveOnly" type="checkbox" checked><span>只看目前有效</span></label>
+        </div>
+      </div>
+      <p class="catalog-count" id="airlineCount"></p>
+      <div id="airlineList" class="airline-list"></div>
+      <div class="empty" id="airlineEmpty" hidden>沒有符合條件的轉點資料。</div>
+    </section>
+  </main>
+
+  <footer>
+    <p>頁面由卡片資料自動產生並檢查內容一致性；銀行最終認定仍以官方公告為準。</p>
+  </footer>
+</body>
+</html>
