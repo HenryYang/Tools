@@ -389,10 +389,16 @@ function airlineGroups(cards = state.cards, activeOnly = true, query = "", categ
 function transferRatio(transfer) {
   return `${fmt.format(transfer.source_points)} 點 → ${fmt.format(transferAmount(transfer))} ${transfer.destination_unit === "point" ? "積分" : "哩"}`;
 }
-function renderAirlineGroup(group) {
-  const banks = new Set(group.entries.map(entry => entry.program.issuer));
-  return `<details class="airline-panel"><summary><strong>${escapeHtml(group.name)}<small class="destination-kind">${group.kind === "hotel" ? "飯店積分" : "航空哩程／積分"}</small></strong><span>${banks.size} 個銀行 · ${group.entries.length} 項轉點選擇<span class="airline-chevron" aria-hidden="true">＋</span></span></summary>
-    <div class="airline-entries">${group.entries.map(({card, program, transfer}) => {
+function bankGroups(entries) {
+  const banks = new Map();
+  for (const entry of entries) {
+    const id = entry.program.issuer;
+    if (!banks.has(id)) banks.set(id, {id, name:entry.card.issuer_name, entries:[]});
+    banks.get(id).entries.push(entry);
+  }
+  return [...banks.values()].sort((a,b) => a.name.localeCompare(b.name,"zh-Hant"));
+}
+function renderTransferEntry({card, program, transfer}) {
       const active = [card.document, program, transfer].every(value => currentlyValid(value));
       return `<article class="airline-entry"><div class="airline-entry-heading"><div><small>${escapeHtml(card.issuer_name)}</small>${card.source_only ? `<strong>${escapeHtml(card.name)}</strong>` : `<a href="#card=${encodeURIComponent(card.id)}" class="airline-card-link">${escapeHtml(card.name)}</a>`}${card.source_only ? "" : `<p>${escapeHtml(program.name)}</p>`}</div><div class="airline-ratio"><strong>${escapeHtml(transferRatio(transfer))}</strong><small>${escapeHtml(transfer.transferMode)}${active ? "" : " · 非目前有效"}</small></div></div>
         <details class="airline-conditions"><summary>兌換條件</summary><div class="airline-conditions-body">${renderStructured({minimum_points:transfer.minimum_points ?? null, increment_points:transfer.increment_points ?? null, maximum_points:transfer.maximum_points ?? null, schedule:transfer.timing_note || transfer.schedule || null, fee:transfer.fee_note || transfer.fee || "手續費暫按免費評估（官方未明載）", redeemer:transfer.redeemer, point_pooling:transfer.point_pooling})}
@@ -402,7 +408,11 @@ function renderAirlineGroup(group) {
         ${(program.notes || []).length ? `<h5>點數計畫補充說明</h5>${program.notes.map(n => `<p class="airline-validity">${escapeHtml(prose(n.text))}</p>`).join("")}` : ""}
         <div class="source-list">${sourceLinks(transfer)}</div></div></details>
       </article>`;
-    }).join("")}</div></details>`;
+}
+function renderAirlineGroup(group) {
+  const banks = bankGroups(group.entries);
+  return `<details class="airline-panel"><summary><strong>${escapeHtml(group.name)}<small class="destination-kind">${group.kind === "hotel" ? "飯店積分" : "航空哩程／積分"}</small></strong><span>${banks.length} 個銀行 · ${group.entries.length} 項轉點選擇<span class="airline-chevron" aria-hidden="true">＋</span></span></summary>
+    <div class="airline-banks">${banks.map(bank => `<details class="airline-bank"><summary><strong>${escapeHtml(bank.name)}</strong><span>${bank.entries.length} 項轉點選擇<span class="bank-chevron" aria-hidden="true">＋</span></span></summary><div class="airline-entries">${bank.entries.map(renderTransferEntry).join("")}</div></details>`).join("")}</div></details>`;
 }
 const allianceOrder = [
   {id:"oneworld", name:"寰宇一家", english:"Oneworld"},
