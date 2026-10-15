@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PCR532 工具箱</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="./style.css" rel="stylesheet">
+<script defer src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/papaparse@5/papaparse.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/pn532.js@0.1.19/dist/pn532.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/pn532.js@0.1.19/dist/Crypto1.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/pn532.js@0.1.19/dist/plugin/Hf14a.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/pn532.js@0.1.19/dist/plugin/WebbleAdapter.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script defer src="./app.js"></script></head><body>
+<header class="bg-white border-bottom"><div class="container py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+<div><h1 class="h4 mb-0">PCR532 工具箱</h1><span class="text-secondary small">透過藍牙 BLE 操作 PN532</span></div>
+<span class="badge text-bg-light border fw-normal">資料僅留在此瀏覽器，不會上傳</span></div></header>
+<main class="container py-4">
+<div id="notice" class="alert alert-info" role="status">正在檢查瀏覽器與函式庫…</div>
+<section class="card mb-4"><div class="card-body">
+<div class="row align-items-center g-3"><div class="col-lg"><h2 class="h5 mb-1">裝置連線</h2><div class="small text-secondary">四項工具共用同一台 PCR532 的 BLE 連線。</div></div>
+<div class="col-lg-auto d-flex flex-wrap gap-2"><button id="connectBtn" class="btn btn-primary">連接 PCR532</button><button id="disconnectBtn" class="btn btn-outline-secondary" disabled>中斷連線</button><button id="firmwareBtn" class="btn btn-outline-secondary" disabled>讀取韌體</button></div></div>
+<div class="d-flex flex-wrap gap-3 mt-3 small"><span>狀態：<strong id="connectionStatus">尚未連線</strong></span><span>韌體：<strong id="firmwareValue">—</strong></span></div>
+</div></section>
+<nav class="nav nav-pills flex-wrap gap-2 mb-3" aria-label="工具切換">
+<button class="nav-link active" data-tab="scanner" aria-current="page">UID 掃描</button>
+<button class="nav-link" data-tab="eml">M1 EML 工具</button>
+<button class="nav-link" data-tab="writer">4-byte UID 寫入</button>
+<button class="nav-link" data-tab="detector">Key Detector</button></nav>
+<section id="scannerPanel" class="tool-panel card"><div class="card-body">
+<h2 class="h5">UID 掃描</h2><p class="text-secondary small">連續感應 13.56 MHz 卡片，記錄 UID、ATQA、SAK 與時間。重複感應同一張卡只更新時間。</p>
+<div class="d-flex flex-wrap gap-2 mb-3"><button id="scanOnceBtn" class="btn btn-outline-primary needs-connection" disabled>掃描一次</button><button id="scanStartBtn" class="btn btn-primary needs-connection" disabled>開始連續掃描</button><button id="scanStopBtn" class="btn btn-warning" disabled>停止</button><button id="scanCsvBtn" class="btn btn-outline-secondary">匯出 CSV</button><button id="scanClearBtn" class="btn btn-outline-danger">清空紀錄</button></div>
+<div class="table-responsive"><table class="table table-striped table-sm align-middle"><thead><tr><th>掃描時間</th><th>UID</th><th>ATQA</th><th>SAK</th></tr></thead><tbody id="scanRows"><tr><td colspan="4" class="text-secondary">尚無紀錄</td></tr></tbody></table></div>
+</div></section>
+<section id="emlPanel" class="tool-panel card d-none"><div class="card-body">
+<h2 class="h5">MIFARE Classic 1K EML 工具</h2><p class="text-secondary small">EML 是整張 1K 卡的 1024-byte 資料映像，可讀取、比對、編輯與寫入。</p>
+<div class="row g-3"><div class="col-lg-8"><label for="emlData" class="form-label fw-semibold">卡片資料（1024 bytes，十六進位）</label><textarea id="emlData" class="form-control font-monospace data-box" spellcheck="false" placeholder="先讀取卡片，或貼上 1024 bytes 的十六進位資料"></textarea><div id="emlSize" class="form-text">目前 0 / 1024 bytes</div></div>
+<div class="col-lg-4"><label for="emlKeys" class="form-label fw-semibold">金鑰清單</label><textarea id="emlKeys" class="form-control font-monospace key-box" spellcheck="false" placeholder="每行一組 12 位 hex">FFFFFFFFFFFF
+000000000000
+A0A1A2A3A4A5
+D3F7D3F7D3F7</textarea><div class="form-text">一般 M1／CUID 需要相應扇區金鑰；Gen1a 後門讀寫不使用此清單。</div></div></div>
+<div class="border-top mt-4 pt-3"><h3 class="h6">讀取與比對</h3><div class="d-flex flex-wrap gap-2">
+<button id="emlReadNormalBtn" class="btn btn-outline-primary needs-connection" disabled>讀取一般 M1／CUID</button><button id="emlReadGen1Btn" class="btn btn-outline-primary needs-connection" disabled>讀取 Gen1a UID 卡</button><button id="emlCompareNormalBtn" class="btn btn-outline-secondary needs-connection" disabled>與一般 M1／CUID 比對</button><button id="emlCompareGen1Btn" class="btn btn-outline-secondary needs-connection" disabled>與 Gen1a 比對</button></div></div>
+<div class="border-top mt-4 pt-3"><h3 class="h6">編輯與匯出</h3><div class="d-flex flex-wrap gap-2">
+<button id="emlBlankBtn" class="btn btn-outline-secondary">建立空白 1K 映像</button><button id="emlExtractKeysBtn" class="btn btn-outline-secondary">從映像提取金鑰</button><button id="emlCopyBtn" class="btn btn-outline-secondary">複製映像</button><button id="emlDownloadBtn" class="btn btn-outline-secondary">下載 .eml</button><label class="btn btn-outline-secondary mb-0" for="emlFile">匯入 .eml／.bin</label><input id="emlFile" class="visually-hidden" type="file" accept=".eml,.bin,.txt"></div></div>
+<div class="alert alert-warning mt-4 mb-2 small">寫入會覆蓋目標卡資料，包含扇區尾塊的金鑰與存取位。一般原廠卡的 Block 0 不可改；完整寫入僅針對相容的特殊測試卡。</div>
+<div class="d-flex flex-wrap gap-2"><button id="emlWriteGen1Btn" class="btn btn-danger needs-connection" disabled>寫入 Gen1a UID 卡</button><button id="emlWriteGen2Btn" class="btn btn-outline-danger needs-connection" disabled>寫入 Gen2 CUID 卡</button></div>
+</div></section>
+<section id="writerPanel" class="tool-panel card d-none"><div class="card-body">
+<h2 class="h5">4-byte UID 寫入</h2><p class="text-secondary small">讀取來源卡的 UID／ATQA／SAK，寫到支援改寫 Block 0 的特殊卡；不複製其他資料或金鑰。</p>
+<div class="row g-3"><div class="col-md-4"><label for="writerUid" class="form-label">UID（8 位 hex）</label><input id="writerUid" class="form-control font-monospace" maxlength="8" placeholder="01020304"></div><div class="col-md-4"><label for="writerAtqa" class="form-label">ATQA（4 位 hex）</label><input id="writerAtqa" class="form-control font-monospace" maxlength="4" value="0004"></div><div class="col-md-4"><label for="writerSak" class="form-label">SAK（2 位 hex）</label><input id="writerSak" class="form-control font-monospace" maxlength="2" value="08"></div>
+<div class="col-md-6"><label for="writerType" class="form-label">目標卡類型</label><select id="writerType" class="form-select"><option value="auto">自動嘗試 Gen1a，再試 CUID</option><option value="gen1a">Gen1a UID 卡</option><option value="gen2">Gen2 CUID 卡（需要 Key）</option></select></div><div class="col-md-6"><label for="writerKeys" class="form-label">CUID 金鑰清單</label><input id="writerKeys" class="form-control font-monospace" value="FFFFFFFFFFFF 000000000000 A0A1A2A3A4A5 D3F7D3F7D3F7" placeholder="每組 12 位 hex，可用空白分隔"><div class="form-text">自動模式只有在 Gen1a 後門無法開啟時，才會用這些 Key 嘗試 CUID。</div></div></div>
+<div class="d-flex flex-wrap gap-2 mt-3"><button id="writerReadBtn" class="btn btn-outline-primary needs-connection" disabled>讀取來源卡</button><button id="writerSaveBtn" class="btn btn-outline-secondary">儲存這組卡號</button><button id="writerWriteBtn" class="btn btn-danger needs-connection" disabled>寫入目標特殊卡並複驗</button></div>
+<div class="row g-2 align-items-end mt-3"><div class="col-md-8"><label for="writerSaved" class="form-label">已儲存的卡號</label><select id="writerSaved" class="form-select"><option value="">選擇卡號…</option></select></div><div class="col-md-4 d-flex gap-2"><button id="writerLoadBtn" class="btn btn-outline-secondary">載入</button><button id="writerDeleteBtn" class="btn btn-outline-danger">刪除</button></div></div>
+<div class="d-flex flex-wrap gap-2 mt-3"><button id="writerCsvBtn" class="btn btn-sm btn-outline-secondary">匯出卡號 CSV</button><label for="writerCsvFile" class="btn btn-sm btn-outline-secondary mb-0">匯入卡號 CSV</label><input id="writerCsvFile" class="visually-hidden" type="file" accept=".csv,text/csv"></div>
+<div class="alert alert-warning small mt-4 mb-0">普通 MIFARE Classic 卡的 UID 無法改寫。請確認目標是你有權操作的 Gen1a／CUID 特殊卡。</div>
+</div></section>
+<section id="detectorPanel" class="tool-panel card d-none"><div class="card-body">
+<h2 class="h5">Key Detector（北方智能卡）</h2><p class="text-secondary small">此工具需搭配「單卡嗅探王」特殊卡。PCR532 負責設定與讀取該卡；一般 M1 卡不具備記錄功能。</p>
+<div class="row g-3"><div class="col-md-6"><label for="detectorUid" class="form-label">要模擬的 4-byte UID</label><input id="detectorUid" class="form-control font-monospace" maxlength="8" placeholder="01020304"></div><div class="col-md-6"><label for="detectorType" class="form-label">卡片類型</label><select id="detectorType" class="form-select"><option value="0">S50CL1（1K）</option><option value="1">S70CL1（4K）</option></select></div>
+<div class="col-md-4"><label for="detectorBlock" class="form-label">Block</label><input id="detectorBlock" class="form-control" type="number" min="0" max="255" value="3"></div><div class="col-md-4"><label for="detectorKeyType" class="form-label">Key 類型</label><select id="detectorKeyType" class="form-select"><option value="0">Key A</option><option value="1">Key B</option></select></div><div class="col-md-4"><label for="detectorKey" class="form-label">金鑰（12 位 hex）</label><input id="detectorKey" class="form-control font-monospace" maxlength="12" value="FFFFFFFFFFFF"></div></div>
+<div class="d-flex flex-wrap gap-2 mt-3"><button id="detectorReadUidBtn" class="btn btn-outline-primary needs-connection" disabled>從來源卡讀 UID</button><button id="detectorSetBtn" class="btn btn-outline-primary needs-connection" disabled>設定單卡嗅探王</button><button id="detectorKeyBtn" class="btn btn-primary needs-connection" disabled>讀取紀錄並計算 Key</button><button id="detectorTestBtn" class="btn btn-outline-secondary needs-connection" disabled>用目前 Key 測試讀取</button><button id="detectorCopyKeyBtn" class="btn btn-outline-secondary">複製 Key</button></div>
+<div class="alert alert-light border small mt-4 mb-0">需另備相容的「單卡嗅探王」，並在你有權測試的讀卡環境收集紀錄；取得的 Key 只對對應卡片與區塊有意義。</div>
+</div></section>
+<section class="card mt-4"><div class="card-body"><div class="d-flex justify-content-between align-items-center gap-2"><h2 class="h6 mb-0">操作紀錄</h2><button id="copyLogBtn" class="btn btn-sm btn-outline-secondary">複製紀錄</button></div><pre id="log" class="log-box mt-3 mb-0" aria-live="polite"></pre></div></section>
+<p class="text-secondary small mt-3">僅操作自己的設備與有權測試的卡片。<a href="https://github.com/taichunmin/pn532.js" target="_blank" rel="noopener noreferrer">通訊函式庫：pn532.js</a></p>
+</main>
+<div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultTitle" aria-describedby="resultMessage" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h2 class="modal-title fs-5" id="resultTitle">操作結果</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="關閉"></button></div><div class="modal-body" id="resultMessage"></div><div class="modal-footer"><button type="button" class="btn btn-primary" data-bs-dismiss="modal">知道了</button></div></div></div></div>
+</body></html>

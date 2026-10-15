@@ -1,0 +1,11 @@
+body { background: #f7f8fa; }
+main.container { max-width: 1080px; }
+.card { border-color: #dfe3e8; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+.nav-pills .nav-link { border: 1px solid #d7dee6; background: #fff; }
+.nav-pills .nav-link.active { border-color: #0d6efd; }
+.data-box { min-height: 290px; font-size: .85rem; line-height: 1.45; }
+.key-box { min-height: 200px; font-size: .85rem; }
+.log-box { min-height: 110px; max-height: 260px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; padding: .85rem; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: .375rem; font-size: .78rem; }
+.table td, .table th { white-space: nowrap; }
+.font-monospace { letter-spacing: .02em; }
+.copyable { cursor: copy; }
