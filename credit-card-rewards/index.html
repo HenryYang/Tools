@@ -6,10 +6,10 @@
   <meta name="description" content="從信用卡回饋 YAML 自動產生的比較與試算工具。">
   <meta name="color-scheme" content="light">
   <title>卡片回饋雷達</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23009e91'/%3E%3Cpath d='M14 20h36v24H14z' rx='4' fill='white'/%3E%3Cpath d='M14 27h36' stroke='%23ff795f' stroke-width='6'/%3E%3Ccircle cx='43' cy='38' r='3' fill='%2325343a'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=20261008-hotel-transfers">
-  <script src="data.generated.js?v=20261008-hotel-transfers"></script>
-  <script src="app.js?v=20261008-hotel-transfers" defer></script>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230d6efd'/%3E%3Cpath d='M14 20h36v24H14z' rx='4' fill='white'/%3E%3Cpath d='M14 27h36' stroke='%236c757d' stroke-width='6'/%3E%3Ccircle cx='43' cy='38' r='3' fill='%2325343a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css?v=20261015-plain-style">
+  <script src="data.generated.js?v=20261015-plain-style"></script>
+  <script src="app.js?v=20261015-plain-style" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -24,8 +24,8 @@
     <section class="intro" aria-labelledby="page-title">
       <div>
         <p class="eyebrow">信用卡回饋資料庫</p>
-        <h1 id="page-title">每一個數字，都能回到原始資料。</h1>
-        <p class="lede">查看各卡的比例、適用條件、排除規則、上限、轉點與查證狀態。摘要不會自行猜測「最優」情境。</p>
+        <h1 id="page-title">信用卡回饋與轉點查詢</h1>
+        <p class="lede">查詢信用卡回饋、適用條件與航空／飯店轉點比例。</p>
       </div>
       <div class="summary" id="summary" aria-label="資料摘要"></div>
     </section>
@@ -38,8 +38,8 @@
     <section class="workspace" aria-label="回饋試算">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">受限試算</p>
-          <h2>用已知的計算規則估算</h2>
+          <p class="eyebrow">依回饋項目估算</p>
+          <h2>回饋試算</h2>
         </div>
         <span class="notice">依所選回饋項目計算；不會自行推定資格、疊加、額度或排除項目</span>
       </div>
@@ -96,7 +96,7 @@
     </div>
     <section id="airlinesView" role="tabpanel" aria-labelledby="airlinesTab" hidden>
       <div class="section-heading catalog-heading">
-        <div><p class="eyebrow">依航空與飯店計畫查詢</p><h2>找出可以轉點的信用卡</h2><p class="airline-intro">點開航空或飯店品牌，查看信用卡、來源點數與兌換比例。</p></div>
+        <div><p class="eyebrow">依航空與飯店計畫查詢</p><h2>航空與飯店轉點</h2><p class="airline-intro">選擇計畫，再展開銀行查看卡片、點數與兌換比例。</p></div>
         <div class="filters">
           <label class="search-label"><span class="sr-only">搜尋轉點計畫</span><input id="airlineSearch" type="search" placeholder="搜尋航空、飯店品牌或會員計畫"></label>
           <label><span class="sr-only">計畫類型</span><select id="destinationCategory"><option value="">航空與飯店</option><option value="airline">航空計畫</option><option value="hotel">飯店計畫</option></select></label>
